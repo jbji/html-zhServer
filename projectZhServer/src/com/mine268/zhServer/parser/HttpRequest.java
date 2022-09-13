@@ -1,5 +1,8 @@
 package com.mine268.zhServer.parser;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class HttpRequest {
 
     /**
@@ -17,5 +20,12 @@ public class HttpRequest {
 
     // 请求使用的http的版本
     public int httpMajorVersion, httpMinorVersion;
+
+    // header键值对
+    // TODO: 按照HTTP/1.0标准改进键值对的存储模型
+    public Map<String, String> header = new HashMap<>();
+
+    // EntityBody
+    public String entityBody;
 
 }

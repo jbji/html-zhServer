@@ -1,29 +1,32 @@
 package com.mine268.zhServer.parser;
 
+/**
+ * Reference:
+ * <a href="https://www.w3.org/Protocols/HTTP/1.0/draft-ietf-http-v10-spec-01.html">
+ *     Hypertext Transfer Protocol -- HTTP/1.0</a>
+ */
 public class HttpRequestParser {
+
+    private int curr_ix = 0;
+
+    private String headerContext;
 
     /**
      * 解析请求内容，返回请求的解析结果。
      * @param context 请求的完整内容
      * @return 解析的结果
      */
-    public static HttpRequest parse(String context) throws HttpRequestException {
+    public HttpRequest parse(String context) throws HttpRequestException {
         var ret = new HttpRequest();
-        var curr_ix = 0;
+        headerContext = context;
         String logic_line;
         String[] logic_line_sep;
-        NoParamRet<String> get_next_line = () -> {
-            int tmp_ix = curr_ix;
-            while (tmp_ix < context.length() && context.charAt(tmp_ix) != '\n') {
-                ++tmp_ix;
-            }
-            return context.substring(curr_ix, tmp_ix).trim();
-        }; // 获取下一个逻辑行
 
         // 获取Request-Line或者Simple-Request
-        logic_line = get_next_line.impl()
+        logic_line = getNextLine()
                 .replaceAll("\\s{2,}", " ");
         logic_line_sep = logic_line.split("\\s");
+        // 判断HTTP版本并设置ret
         if (logic_line_sep.length == 2) { // Simple-Request
             if (!logic_line_sep[0].equals("GET")) {
                 throw new HttpRequestException("HTTP/0.?不支持此方式：" + logic_line);
@@ -41,6 +44,7 @@ public class HttpRequestParser {
         } else {
             throw new HttpRequestException("无法解析首行：" + logic_line);
         }
+        // 检查URI是否正确
         if (uriCheck(logic_line_sep[1])) {
             ret.requestURI = logic_line_sep[1];
         } else {
@@ -48,8 +52,28 @@ public class HttpRequestParser {
         }
 
         // 逐行解析剩下的General/Request/Entity-header
+        boolean end_of_header = false;
+        do {
+            logic_line = getNextLine();
+            end_of_header = logic_line.equals("");
+            if (end_of_header) {
+                break;
+            }
+            var colon_index = logic_line.indexOf(':');
+            String[] k_v_array = { logic_line.substring(0, colon_index + 1),
+                    logic_line.substring(colon_index + 1)};
+            // http解码
+            k_v_array[1] = httpDecode(k_v_array[1]);
+
+            if (ret.header.containsKey(k_v_array[0])) {
+                ret.header.put(k_v_array[0], "," + ret.header.get(k_v_array[0]) + k_v_array[1]);
+            } else {
+                ret.header.put(k_v_array[0], k_v_array[1]);
+            }
+        } while (true);
 
         // 处理Entity-Body
+        ret.entityBody = headerContext.substring(curr_ix);
 
         return ret;
     }
@@ -84,10 +108,102 @@ public class HttpRequestParser {
     }
 
     /**
-     * 函数式接口，无参数，有返回值
-     * @param <T> 返回值的类型
+     * 进行http解码
+     * @param str 待解码的字符串
+     * @return 解码完成后的字符
      */
-    private interface NoParamRet<T> {
-        T impl();
+    public static String httpDecode(String str) throws HttpRequestException {
+        var strb = new StringBuilder();
+        int start = 0, end = 0;
+        while (end < str.length()) {
+            start = end;
+            while (end < str.length() && str.charAt(end) != '%' && str.charAt(end) != '+') {
+                ++end;
+            }
+            strb.append(str.substring(start, end));
+            if (end < str.length()) {
+                switch (str.charAt(end)) {
+                    case '+' -> {
+                        strb.append(' ');
+                        start = ++end;
+                    }
+                    case '%' -> {
+                        int code_buffer, trailing_character = 0;
+                        if (end + 2 < str.length()) {
+                            code_buffer = Integer.parseInt(str.substring(end + 1, end + 3), 16);
+                            if ((code_buffer & 0x80) == 0x00) { // 0XXX,XXXX
+//                                trailing_character = 0;
+                                code_buffer &= 0x7f;
+                            } else if ((code_buffer & 0xe0) == 0xc0) { // 110X,XXXX
+                                trailing_character = 1;
+                                code_buffer &= 0x1f;
+                            } else if ((code_buffer & 0xf0) == 0xe0) { // 1110,XXXX
+                                trailing_character = 2;
+                                code_buffer &= 0x0f;
+                            } else if ((code_buffer & 0xf8) == 0xf0) { // 1111,0XXX
+                                trailing_character = 3;
+                                code_buffer &= 0x07;
+                            }
+                            while (trailing_character-- != 0) {
+                                end += 3;
+                                code_buffer <<= 6;
+                                if (str.charAt(end) == '%' && end + 2 < str.length()) {
+                                    var tmp_code_buffer = Integer.parseInt(str.substring(end + 1, end + 3), 16);
+                                    if ((tmp_code_buffer & 0x80) != 0x80) {
+                                        throw new HttpRequestException("不正确的UTF8编码：" + str);
+                                    }
+                                    code_buffer |= tmp_code_buffer & 0x3f;
+                                } else {
+                                    throw new HttpRequestException("不正确的UTF8编码：" + str);
+                                }
+                            }
+                            strb.append((char) code_buffer);
+                            end += 3;
+                            start = end;
+                        } else {
+                            throw new HttpRequestException("不能转义的值：" + str);
+                        }
+                    }
+                    default -> {
+                    }
+                }
+            }
+        }
+
+        return strb.toString();
+    }
+
+    /**
+     * 获取下一个逻辑行
+     * @return 获取到的逻辑行
+     */
+    private String getNextLine() {
+        int start = curr_ix, end = curr_ix;
+        boolean end_of_logic_line = curr_ix >= headerContext.length() - 1;
+        while(!end_of_logic_line) {
+            end_of_logic_line = (end >= headerContext.length() - 1) ||
+                    (headerContext.charAt(end) == '\n' && !isSpace(headerContext.charAt(end + 1)));
+            ++end;
+        }
+        curr_ix = end;
+        return headerContext.substring(start, end).replaceAll("\\n\\s+", "").trim();
+    }
+
+    /**
+     * 判断是否是十六进制字符
+     * @param c 字符
+     * @return 是否是十六进制字符
+     */
+    private static boolean isHexDigit(char c) {
+        return (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F') || (c >= '0' && c <= '9');
+    }
+
+    /**
+     * 判断某个字符是不是空字符
+     * @param c 字符
+     * @return 判断结果
+     */
+    private static boolean isSpace(char c) {
+        return c == ' ' || c == '\t';
     }
 }
