@@ -27,7 +27,7 @@ public class TestMain {
     public static void parseTest() {
         String[] heads = {
                 """
-                GET https://www.baidu.com
+                GET https://www.baidu.com?fname=2333&uuid=9900 HTTP/1.0
                 Date: Tue,\040
                  15 Nov 1994 08:12:31 GMT
                 Expires: Thu, 01 Dec 1994 16:00:00 GMT
@@ -37,7 +37,7 @@ public class TestMain {
                 
                 <h1>2333</h1>
                 """,
-                "POST https://www.baidu.com",
+                "POST https://www.baidu.com HTTP/1.0\n\nuuid=23874789324",
                 "GET /indexes/index.html?fname=0&rname=2 HTTP/1.0",
                 "POST / HTTP/1.2",
                 "GET /pages/kill.html HTTP/1.2",

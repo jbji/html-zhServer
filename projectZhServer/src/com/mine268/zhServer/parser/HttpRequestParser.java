@@ -1,5 +1,8 @@
 package com.mine268.zhServer.parser;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Reference:
  * <a href="https://www.w3.org/Protocols/HTTP/1.0/draft-ietf-http-v10-spec-01.html">
@@ -46,7 +49,8 @@ public class HttpRequestParser {
         }
         // 检查URI是否正确
         if (uriCheck(logic_line_sep[1])) {
-            ret.requestURI = logic_line_sep[1];
+            var tmp_ix = logic_line_sep[1].indexOf("?");
+            ret.requestURI = logic_line_sep[1].substring(tmp_ix == -1 ? 0 : tmp_ix);
         } else {
             throw new HttpRequestException("不正确的uri：" + logic_line);
         }
@@ -75,6 +79,31 @@ public class HttpRequestParser {
         // 处理Entity-Body
         ret.entityBody = headerContext.substring(curr_ix);
 
+        // 处理表单参数
+        if (ret.requestType == HttpRequest.RequestType.GET) {
+            ret.tableValues = parseTableData(ret.requestURI.substring(ret.requestURI.indexOf("?") + 1));
+        } else if (ret.requestType == HttpRequest.RequestType.POST) {
+            ret.tableValues = parseTableData(ret.entityBody);
+        }
+
+        return ret;
+    }
+
+    /**
+     * 解析表单提交的数据
+     * @param context 表单数据字符串
+     * @return 解析结果
+     */
+    private static Map<String, String> parseTableData(String context) {
+        var kvs = context.split("&");
+        var ret = new HashMap<String, String>();
+        for (var kv : kvs) {
+            var equal_ix = kv.indexOf("=");
+            ret.put(
+                    kv.substring(0, equal_ix),
+                    kv.substring(equal_ix + 1)
+            );
+        }
         return ret;
     }
 

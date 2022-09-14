@@ -28,4 +28,7 @@ public class HttpRequest {
     // EntityBody
     public String entityBody;
 
+    // 表单数据
+    public Map<String, String> tableValues = new HashMap<>();
+
 }
