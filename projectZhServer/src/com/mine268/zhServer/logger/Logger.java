@@ -1,4 +1,4 @@
-package com.mine268.zhServer.Logger;
+package com.mine268.zhServer.logger;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;

@@ -1,6 +1,6 @@
 package com.mine268.zhServer;
 
-import com.mine268.zhServer.Logger.Logger;
+import com.mine268.zhServer.logger.Logger;
 
 import java.io.IOException;
 import java.util.Date;
