@@ -1,5 +1,8 @@
 package com.mine268.zhServer.webServer;
 
+import com.mine268.zhServer.logger.Logger;
+
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -17,6 +20,9 @@ public class WebServer {
     // socket
     ServerSocket serverSocket;
 
+    // 所有RequestHandler的logger
+    Logger logger_for_all;
+
     /**
      * 创建多线程服务器
      * @param core_thread 核心线程数
@@ -26,7 +32,7 @@ public class WebServer {
      * @param queue_length 任务等待队列
      */
     public WebServer(int _port, int core_thread, int max_thread, int keep_alive_time,
-                     TimeUnit time_unit, int queue_length) {
+                     TimeUnit time_unit, int queue_length) throws FileNotFoundException {
         assert(_port > 1023);
         assert(core_thread > 0);
         assert(max_thread > 0);
@@ -43,6 +49,8 @@ public class WebServer {
                 new LinkedBlockingQueue<>(queue_length),
                 new ThreadPoolExecutor.DiscardOldestPolicy()
         );
+
+        logger_for_all = new Logger(WebServerConfig.root_path + WebServerConfig.log_path);
     }
 
     /**
@@ -53,7 +61,8 @@ public class WebServer {
         serverSocket = new ServerSocket(port);
         while (true) {
             var socket = serverSocket.accept();
-            threadPool.execute(new RequestHandler(socket));
+            threadPool.execute(new RequestHandler(socket, logger_for_all));
+            socket.close();
         }
     }
 }

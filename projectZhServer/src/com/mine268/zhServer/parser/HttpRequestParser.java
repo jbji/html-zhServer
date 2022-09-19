@@ -50,7 +50,7 @@ public class HttpRequestParser {
         // 检查URI是否正确
         if (uriCheck(logic_line_sep[1])) {
             var tmp_ix = logic_line_sep[1].indexOf("?");
-            ret.requestURI = logic_line_sep[1].substring(tmp_ix == -1 ? 0 : tmp_ix);
+            ret.requestURI = logic_line_sep[1].substring(0, tmp_ix == -1 ? 0 : tmp_ix);
         } else {
             throw new HttpRequestException("不正确的uri：" + logic_line);
         }
