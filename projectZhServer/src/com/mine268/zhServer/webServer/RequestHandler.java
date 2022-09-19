@@ -4,9 +4,7 @@ import com.mine268.zhServer.logger.Logger;
 import com.mine268.zhServer.parser.HttpRequest;
 import com.mine268.zhServer.parser.HttpRequestParser;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.util.Arrays;
@@ -30,16 +28,60 @@ public class RequestHandler implements Runnable {
 
     @Override
     public void run() {
-        HttpRequest request_ctx;
-        // todo: 读取
+        HttpRequest request_ctx = null;
+        WebServerConfig.StatusCode status_code = WebServerConfig.StatusCode.OK; //结果状态
+        URL url = null;  //URL
+
+        // -------------------------------------------读取-------------------------------------------
         try {
             request_ctx = new HttpRequestParser().parse(
                     Arrays.toString(readStream(socket.getInputStream())));
+
+            //解析URL
+            url = new URL(request_ctx.requestURI);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        // todo: 执行
-        // todo: 返回
+
+        // -------------------------------------------执行-------------------------------------------
+        if(request_ctx.requestType == HttpRequest.RequestType.GET){
+
+        }
+        else if(request_ctx.requestType == HttpRequest.RequestType.POST){
+
+        }
+
+        String file_path = url.path;
+        status_code = WebServerConfig.StatusCode.OK;
+
+        //读取网页数据
+        InputStream input_stream = null;
+        try {
+            input_stream = new FileInputStream(WebServerConfig.root_path + file_path);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        // -------------------------------------------返回-------------------------------------------
+        returnPage(socket,status_code,input_stream);
+        try{
+            socket.close();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
+    private void returnPage(Socket socket, WebServerConfig.StatusCode code, InputStream input_stream){
+        try {
+            var output_stream = socket.getOutputStream();
+            output_stream.write(WebServerConfig.getHtmlHeader(code).getBytes());
+            output_stream.write(input_stream.readAllBytes());
+            output_stream.close();
+        } catch(Exception e){
+            e.printStackTrace();
+        }
     }
 
     /**

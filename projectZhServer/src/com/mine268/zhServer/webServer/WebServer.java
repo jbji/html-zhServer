@@ -50,7 +50,7 @@ public class WebServer {
                 new ThreadPoolExecutor.DiscardOldestPolicy()
         );
 
-        logger_for_all = new Logger(WebServerConfig.root_path + WebServerConfig.log_path);
+        //logger_for_all = new Logger(WebServerConfig.root_path + WebServerConfig.log_path);
     }
 
     /**
@@ -62,7 +62,7 @@ public class WebServer {
         while (true) {
             var socket = serverSocket.accept();
             threadPool.execute(new RequestHandler(socket, logger_for_all));
-            socket.close();
+            //socket.close();
         }
     }
 }

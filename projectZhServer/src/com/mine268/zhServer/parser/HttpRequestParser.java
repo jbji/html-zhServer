@@ -20,6 +20,7 @@ public class HttpRequestParser {
      * @return 解析的结果
      */
     public HttpRequest parse(String context) throws HttpRequestException {
+        System.out.println(context);
         var ret = new HttpRequest();
         headerContext = context;
         String logic_line;
