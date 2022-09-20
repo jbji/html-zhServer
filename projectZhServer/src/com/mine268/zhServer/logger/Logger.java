@@ -1,5 +1,7 @@
 package com.mine268.zhServer.logger;
 
+import com.mine268.zhServer.gui.GuiSingleton;
+
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -68,6 +70,7 @@ public class Logger {
     private synchronized void logText(String text) throws IOException {
         // 考虑多线程同一个logger对象的调用
         log_stream.write(text.getBytes());
+        GuiSingleton.GetInstance().addLog(text.getBytes());
     }
 
 }
