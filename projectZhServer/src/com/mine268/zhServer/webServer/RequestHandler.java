@@ -5,9 +5,12 @@ import com.mine268.zhServer.parser.HttpRequest;
 import com.mine268.zhServer.parser.HttpRequestParser;
 
 import java.io.*;
-import java.net.Socket;
-import java.net.SocketTimeoutException;
+import java.lang.reflect.InvocationTargetException;
+import java.net.*;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.stream.Stream;
 
 public class RequestHandler implements Runnable {
 
@@ -30,39 +33,78 @@ public class RequestHandler implements Runnable {
     public void run() {
         HttpRequest request_ctx = null;
         WebServerConfig.StatusCode status_code; //结果状态
-        String file_path = null;
-        InputStream file_input_stream = null;
+        String request_file = null;
+        InputStream request_file_stream = null;
 
-        // -------------------------------------------读取-------------------------------------------
+        // -- 读取请求 --
         try {
             request_ctx = new HttpRequestParser().parse(
                     new String(readStream(socket.getInputStream())));
 
             if(request_ctx.requestURI.equals("/"))
-                file_path = WebServerConfig.default_page_path;
+                request_file = WebServerConfig.default_page_path;
             else
-                file_path = request_ctx.requestURI;
+                request_file = request_ctx.requestURI;
         } catch (Exception ex) {
             ex.printStackTrace();
         }
 
-        //读取网页数据
+        // -- 读取网页文件 --
+        // 读取网页数据
         String page_path;
-        if (new File(WebServerConfig.root_path + file_path).exists()) {
-            page_path = WebServerConfig.root_path + file_path;
-            status_code = WebServerConfig.StatusCode.OK;
+        assert request_file != null;
+        // 根据访问的页面存在性设置状态码和访问的地址
+        if (request_file.matches("^/cgi-bin/.+")) {
+            if (new File(WebServerConfig.root_path + request_file + ".jar").exists()) {
+                page_path = WebServerConfig.root_path + request_file + ".jar";
+                status_code = WebServerConfig.StatusCode.OK;
+            } else {
+                page_path = WebServerConfig.root_path + WebServerConfig.not_found_page;
+                status_code = WebServerConfig.StatusCode.NOT_FOUND;
+            }
         } else {
-            page_path = WebServerConfig.root_path + WebServerConfig.not_found_page;
-            status_code = WebServerConfig.StatusCode.NOT_FOUND;
-        }
-        try {
-            file_input_stream = new FileInputStream(page_path);
-        } catch (Exception e) {
-            e.printStackTrace();
+            if (new File(WebServerConfig.root_path + request_file).exists()) {
+                page_path = WebServerConfig.root_path + request_file;
+                status_code = WebServerConfig.StatusCode.OK;
+            } else {
+                page_path = WebServerConfig.root_path + WebServerConfig.not_found_page;
+                status_code = WebServerConfig.StatusCode.NOT_FOUND;
+            }
         }
 
-        // -------------------------------------------返回-------------------------------------------
-        returnPage(socket, status_code, file_input_stream);
+        if (request_file.matches("^/cgi-bin/.+")) {
+            // 处理请求CGI
+            // TODO: 执行CGI程序，取得返回结果
+            try (var cl = new URLClassLoader(new URL[] { new URL("file:" + page_path) })) {
+                var clazz = cl.loadClass(WebServerConfig.cgi_bin_class);
+                var method = clazz.getMethod(WebServerConfig.cgi_bin_method, String.class);
+                var cgi_ret = (String) method.invoke(clazz.getDeclaredConstructor().newInstance(), request_ctx.tableValuesStr);
+                request_file_stream = new ByteArrayInputStream(cgi_ret.getBytes(StandardCharsets.UTF_8));
+            } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException |
+                     InvocationTargetException | IOException | InstantiationException e) {
+                // 若CGI执行失败，则产生500错误
+                try {
+                    request_file_stream = new FileInputStream(
+                            WebServerConfig.root_path + WebServerConfig.internal_err_page);
+                } catch (FileNotFoundException ex) {
+                    // 若500错误页面无法找到，则log报错
+                    ex.printStackTrace();
+                }
+                status_code = WebServerConfig.StatusCode.INTERNAL_SERVER_ERROR;
+                e.printStackTrace();
+            }
+        } else {
+            // 处理静态页面
+            try {
+                request_file_stream = new FileInputStream(page_path);
+            } catch (Exception e) {
+                // 静态页面处理错误，则报错
+                e.printStackTrace();
+            }
+        }
+
+        // -- 返回 --
+        returnPage(socket, status_code, request_file_stream);
         try{
             socket.close();
         } catch (Exception e){

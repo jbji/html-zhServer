@@ -30,5 +30,7 @@ public class HttpRequest {
 
     // 表单数据
     public Map<String, String> tableValues = new HashMap<>();
+    // 文本格式的表单数据
+    public String tableValuesStr;
 
 }

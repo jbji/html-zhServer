@@ -80,10 +80,14 @@ public class HttpRequestParser {
         ret.entityBody = headerContext.substring(curr_ix);
 
         // 处理表单参数
+        // TODO: tableValuesStr提取
         if (ret.requestType == HttpRequest.RequestType.GET) {
-            ret.tableValues = parseTableData(ret.requestURI.substring(ret.requestURI.indexOf("?") + 1));
+            var tableStr = ret.requestURI.substring(ret.requestURI.indexOf("?") + 1);
+            ret.tableValues = parseTableData(tableStr);
+            ret.tableValuesStr = tableStr;
         } else if (ret.requestType == HttpRequest.RequestType.POST) {
             ret.tableValues = parseTableData(ret.entityBody);
+            ret.tableValuesStr = ret.entityBody;
         }
 
         return ret;
@@ -117,8 +121,8 @@ public class HttpRequestParser {
     private static boolean uriCheck(String uri) {
         return uri.matches(
                 "(([a-zA-Z][0-9a-zA-Z+\\\\\\\\-\\\\\\\\.]*:)?" +
-                "/{0,2}[0-9a-zA-Z;/?:@&=+$\\\\\\\\.\\\\\\\\-_!~*'()%]+)?" +
-                "(#[0-9a-zA-Z;/?:@&=+$\\\\\\\\.\\\\\\\\-_!~*'()%]+)?");
+                "/{0,2}[\\-0-9a-zA-Z;/?:@&=+$\\\\\\\\.\\\\\\\\-_!~*'()%]+)?" +
+                "(#[\\-0-9a-zA-Z;/?:@&=+$\\\\\\\\.\\\\\\\\-_!~*'()%]+)?");
     }
 
     /**

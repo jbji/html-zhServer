@@ -8,9 +8,15 @@ public class WebServerConfig {
 
     public static final String cgi_bin_path = "/cgi-bin";
 
+    public static final String cgi_bin_class = "webserver.cgi.CGIClass";
+
+    public static final String cgi_bin_method = "run";
+
     public static final String default_page_path = "/index.html";
 
     public static final String not_found_page = "/404.html";
+
+    public static final String internal_err_page = "/500.html";
 
     public static final int socket_timeout = 20 * 1000;
 
@@ -36,7 +42,7 @@ public class WebServerConfig {
         return String.format("""
             HTTP/1.0 %d %s
             Content-Type: text/html
-            Server: Bot
+            Server: zhServer
             
             """,
                 statusCode.code, statusCode.description);
