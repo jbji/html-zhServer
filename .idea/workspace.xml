@@ -2,9 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="03d9cb74-d23d-48a8-9093-a01d22949bef" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/projectZhServer/src/com/mine268/zhServer/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/projectZhServer/src/com/mine268/zhServer/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/projectZhServer/src/com/mine268/zhServer/parser/HttpRequestParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/projectZhServer/src/com/mine268/zhServer/parser/HttpRequestParser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/projectZhServer/src/com/mine268/zhServer/webServer/RequestHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/projectZhServer/src/com/mine268/zhServer/webServer/RequestHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/projectZhServer/src/com/mine268/zhServer/webServer/URL.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/projectZhServer/src/com/mine268/zhServer/webServer/WebServerConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/projectZhServer/src/com/mine268/zhServer/webServer/WebServerConfig.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,18 +23,18 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "full.screen.before.presentation.mode": "false",
-    "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0",
-    "settings.editor.selected.configurable": "preferences.lookFeel"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;full.screen.before.presentation.mode&quot;: &quot;false&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="Main" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="com.mine268.zhServer.Main" />
@@ -70,16 +71,5 @@
         </entry>
       </map>
     </option>
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/projectZhServer/src/com/mine268/zhServer/webServer/RequestHandler.java</url>
-          <line>40</line>
-          <option name="timeStamp" value="13" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

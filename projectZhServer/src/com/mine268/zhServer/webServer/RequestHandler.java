@@ -29,43 +29,40 @@ public class RequestHandler implements Runnable {
     @Override
     public void run() {
         HttpRequest request_ctx = null;
-        WebServerConfig.StatusCode status_code = WebServerConfig.StatusCode.OK; //结果状态
+        WebServerConfig.StatusCode status_code; //结果状态
         String file_path = null;
+        InputStream file_input_stream = null;
 
         // -------------------------------------------读取-------------------------------------------
         try {
             request_ctx = new HttpRequestParser().parse(
                     new String(readStream(socket.getInputStream())));
 
-            if(request_ctx.requestURI.length() == 1)
+            if(request_ctx.requestURI.equals("/"))
                 file_path = WebServerConfig.default_page_path;
             else
                 file_path = request_ctx.requestURI;
         } catch (Exception ex) {
             ex.printStackTrace();
-        } // 张天 软件工程组 分析 理解 程序应用支持 系统支持
-
-        // -------------------------------------------执行-------------------------------------------
-        if(request_ctx.requestType == HttpRequest.RequestType.GET){
-
         }
-        else if(request_ctx.requestType == HttpRequest.RequestType.POST){
-
-        }
-
-        status_code = WebServerConfig.StatusCode.OK;
 
         //读取网页数据
-        InputStream input_stream = null;
+        String page_path;
+        if (new File(WebServerConfig.root_path + file_path).exists()) {
+            page_path = WebServerConfig.root_path + file_path;
+            status_code = WebServerConfig.StatusCode.OK;
+        } else {
+            page_path = WebServerConfig.root_path + WebServerConfig.not_found_page;
+            status_code = WebServerConfig.StatusCode.NOT_FOUND;
+        }
         try {
-            input_stream = new FileInputStream(WebServerConfig.root_path + file_path);
+            file_input_stream = new FileInputStream(page_path);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-
         // -------------------------------------------返回-------------------------------------------
-        returnPage(socket,status_code,input_stream);
+        returnPage(socket, status_code, file_input_stream);
         try{
             socket.close();
         } catch (Exception e){
