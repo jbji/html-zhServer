@@ -2,7 +2,7 @@ package com.mine268.zhServer.webServer;
 
 public class WebServerConfig {
 
-    public static final String root_path = "/webroot";
+    public static final String root_path = "F:/html-zhServer/projectZhServer/webroot";
 
     public static final String log_path = "/log";
 

@@ -30,15 +30,17 @@ public class RequestHandler implements Runnable {
     public void run() {
         HttpRequest request_ctx = null;
         WebServerConfig.StatusCode status_code = WebServerConfig.StatusCode.OK; //结果状态
-        URL url = null;  //URL
+        String file_path = null;
 
         // -------------------------------------------读取-------------------------------------------
         try {
             request_ctx = new HttpRequestParser().parse(
                     new String(readStream(socket.getInputStream())));
 
-            //解析URL
-            url = new URL(request_ctx.requestURI);
+            if(request_ctx.requestURI.length() == 1)
+                file_path = WebServerConfig.default_page_path;
+            else
+                file_path = request_ctx.requestURI;
         } catch (Exception ex) {
             ex.printStackTrace();
         } // 张天 软件工程组 分析 理解 程序应用支持 系统支持
@@ -51,7 +53,6 @@ public class RequestHandler implements Runnable {
 
         }
 
-        String file_path = url.path;
         status_code = WebServerConfig.StatusCode.OK;
 
         //读取网页数据

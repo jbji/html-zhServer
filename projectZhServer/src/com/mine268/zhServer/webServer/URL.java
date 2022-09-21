@@ -10,9 +10,12 @@ public class URL {
     public String fragment = null;
 
     public URL(String in_url){
+        String t_url = in_url;
         //1.
-        this.scheme = in_url.split("://")[0];
-        String t_url = in_url.split("://")[1];
+        if(t_url.contains("://")){
+            this.scheme = in_url.split("://")[0];
+            t_url = in_url.split("://")[1];
+        }
         //2.
         if(t_url.contains("#")){
             this.fragment = t_url.split("#")[1];
@@ -26,17 +29,18 @@ public class URL {
         //4.
         if(t_url.contains("/")){
             this.path = t_url.substring(t_url.indexOf("/"));
-            t_url = t_url.split("/")[0];
+            if(this.path.length() == 1) this.path = WebServerConfig.default_page_path;
+            //t_url = t_url.split("/")[0];
         }
-        else{
+        /*else{
             this.path = WebServerConfig.default_page_path;
-        }
+        }*/
         //5.
         if(t_url.contains(":")){
             this.port = t_url.split(":")[1];
             t_url = t_url.split(":")[0];
         }
         //6.
-        this.host = t_url;
+        //this.host = t_url;
     }
 }
