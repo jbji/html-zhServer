@@ -35,13 +35,13 @@ public class RequestHandler implements Runnable {
         // -------------------------------------------读取-------------------------------------------
         try {
             request_ctx = new HttpRequestParser().parse(
-                    Arrays.toString(readStream(socket.getInputStream())));
+                    new String(readStream(socket.getInputStream())));
 
             //解析URL
             url = new URL(request_ctx.requestURI);
         } catch (Exception ex) {
             ex.printStackTrace();
-        }
+        } // 张天 软件工程组 分析 理解 程序应用支持 系统支持
 
         // -------------------------------------------执行-------------------------------------------
         if(request_ctx.requestType == HttpRequest.RequestType.GET){
@@ -73,6 +73,12 @@ public class RequestHandler implements Runnable {
 
     }
 
+    /**
+     * 返回页面到socket上
+     * @param socket 返回到的主机的socket
+     * @param code 页面状态码
+     * @param input_stream 页面的输入流
+     */
     private void returnPage(Socket socket, WebServerConfig.StatusCode code, InputStream input_stream){
         try {
             var output_stream = socket.getOutputStream();

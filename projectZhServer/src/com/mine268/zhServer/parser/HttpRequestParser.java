@@ -20,7 +20,6 @@ public class HttpRequestParser {
      * @return 解析的结果
      */
     public HttpRequest parse(String context) throws HttpRequestException {
-        System.out.println(context);
         var ret = new HttpRequest();
         headerContext = context;
         String logic_line;
@@ -39,7 +38,7 @@ public class HttpRequestParser {
             ret.httpMajorVersion = 0;
             ret.httpMinorVersion = -1;
         } else if (logic_line_sep.length == 3) { // Request-Line
-            if (!logic_line_sep[2].endsWith("1.0")) { // 仅支持HTTP/1.0
+            if (!(logic_line_sep[2].endsWith("1.0") || logic_line_sep[2].endsWith("1.1"))) { // 仅支持HTTP/1.0 1.1
                 throw new HttpRequestException("不受支持的版本：" + logic_line_sep[2]);
             }
             ret.requestType = requestParse(logic_line_sep[0]);
@@ -51,7 +50,7 @@ public class HttpRequestParser {
         // 检查URI是否正确
         if (uriCheck(logic_line_sep[1])) {
             var tmp_ix = logic_line_sep[1].indexOf("?");
-            ret.requestURI = logic_line_sep[1].substring(0, tmp_ix == -1 ? 0 : tmp_ix);
+            ret.requestURI = logic_line_sep[1].substring(0, tmp_ix == -1 ? logic_line_sep[1].length() : tmp_ix);
         } else {
             throw new HttpRequestException("不正确的uri：" + logic_line);
         }
@@ -65,8 +64,8 @@ public class HttpRequestParser {
                 break;
             }
             var colon_index = logic_line.indexOf(':');
-            String[] k_v_array = { logic_line.substring(0, colon_index + 1),
-                    logic_line.substring(colon_index + 1)};
+            String[] k_v_array = { logic_line.substring(0, colon_index),
+                    logic_line.substring(colon_index + 1).trim()};
             // http解码
             k_v_array[1] = httpDecode(k_v_array[1]);
 
@@ -100,10 +99,12 @@ public class HttpRequestParser {
         var ret = new HashMap<String, String>();
         for (var kv : kvs) {
             var equal_ix = kv.indexOf("=");
-            ret.put(
-                    kv.substring(0, equal_ix),
-                    kv.substring(equal_ix + 1)
-            );
+            if (equal_ix != -1) {
+                ret.put(
+                        kv.substring(0, equal_ix),
+                        kv.substring(equal_ix + 1)
+                );
+            }
         }
         return ret;
     }
