@@ -2,13 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="03d9cb74-d23d-48a8-9093-a01d22949bef" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/projectZhServer/webroot/500.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/projectZhServer/src/com/mine268/zhServer/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/projectZhServer/src/com/mine268/zhServer/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/projectZhServer/src/com/mine268/zhServer/logger/Logger.java" beforeDir="false" afterPath="$PROJECT_DIR$/projectZhServer/src/com/mine268/zhServer/logger/Logger.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/projectZhServer/src/com/mine268/zhServer/parser/HttpRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/projectZhServer/src/com/mine268/zhServer/parser/HttpRequest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/projectZhServer/src/com/mine268/zhServer/parser/HttpRequestParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/projectZhServer/src/com/mine268/zhServer/parser/HttpRequestParser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/projectZhServer/src/com/mine268/zhServer/webServer/RequestHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/projectZhServer/src/com/mine268/zhServer/webServer/RequestHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/projectZhServer/src/com/mine268/zhServer/webServer/WebServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/projectZhServer/src/com/mine268/zhServer/webServer/WebServer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/projectZhServer/src/com/mine268/zhServer/webServer/WebServerConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/projectZhServer/src/com/mine268/zhServer/webServer/WebServerConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/projectZhServer/webroot/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/projectZhServer/webroot/index.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -37,7 +39,7 @@
     "project.structure.last.edited": "Project",
     "project.structure.proportion": "0.0",
     "project.structure.side.proportion": "0.0",
-    "settings.editor.selected.configurable": "preferences.lookFeel"
+    "settings.editor.selected.configurable": "editor.preferences.appearance"
   }
 }]]></component>
   <component name="RecentsManager">
@@ -67,7 +69,8 @@
       <workItem from="1663661700976" duration="5272000" />
       <workItem from="1663743258027" duration="58000" />
       <workItem from="1663743324767" duration="211000" />
-      <workItem from="1663743551302" duration="3886000" />
+      <workItem from="1663743551302" duration="4660000" />
+      <workItem from="1663750706932" duration="5416000" />
     </task>
     <servers />
   </component>
@@ -85,15 +88,8 @@
       </map>
     </option>
   </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/projectZhServer/src/com/mine268/zhServer/webServer/RequestHandler.java</url>
-          <line>33</line>
-          <option name="timeStamp" value="7" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>

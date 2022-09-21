@@ -1,5 +1,6 @@
 package com.mine268.zhServer.parser;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,5 +33,8 @@ public class HttpRequest {
     public Map<String, String> tableValues = new HashMap<>();
     // 文本格式的表单数据
     public String tableValuesStr;
+
+    // 请求到达的时间
+    public Date hitTime;
 
 }

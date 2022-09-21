@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 public class WebServer {
 
     // 线程池
-    private ThreadPoolExecutor threadPool;
+    private final ThreadPoolExecutor threadPool;
 
     // 监听的端口
     int port;
@@ -32,7 +32,7 @@ public class WebServer {
      * @param queue_length 任务等待队列
      */
     public WebServer(int _port, int core_thread, int max_thread, int keep_alive_time,
-                     TimeUnit time_unit, int queue_length) throws FileNotFoundException {
+                     TimeUnit time_unit, int queue_length) {
         assert(_port > 1023);
         assert(core_thread > 0);
         assert(max_thread > 0);
@@ -50,7 +50,7 @@ public class WebServer {
                 new ThreadPoolExecutor.DiscardOldestPolicy()
         );
 
-        //logger_for_all = new Logger(WebServerConfig.root_path + WebServerConfig.log_path);
+        logger_for_all = new Logger(System.out);
     }
 
     /**
@@ -62,7 +62,6 @@ public class WebServer {
         while (true) {
             var socket = serverSocket.accept();
             threadPool.execute(new RequestHandler(socket, logger_for_all));
-            //socket.close();
         }
     }
 }

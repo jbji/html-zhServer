@@ -7,10 +7,7 @@ import com.mine268.zhServer.parser.HttpRequestParser;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.net.*;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.stream.Stream;
 
 public class RequestHandler implements Runnable {
 
@@ -46,7 +43,7 @@ public class RequestHandler implements Runnable {
             else
                 request_file = request_ctx.requestURI;
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.logError(ex.getMessage());
         }
 
         // -- 读取网页文件 --
@@ -74,7 +71,6 @@ public class RequestHandler implements Runnable {
 
         if (request_file.matches("^/cgi-bin/.+")) {
             // 处理请求CGI
-            // TODO: 执行CGI程序，取得返回结果
             try (var cl = new URLClassLoader(new URL[] { new URL("file:" + page_path) })) {
                 var clazz = cl.loadClass(WebServerConfig.cgi_bin_class);
                 var method = clazz.getMethod(WebServerConfig.cgi_bin_method, String.class);
@@ -83,15 +79,15 @@ public class RequestHandler implements Runnable {
             } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException |
                      InvocationTargetException | IOException | InstantiationException e) {
                 // 若CGI执行失败，则产生500错误
+                logger.logError(String.format("CGI程序执行错误：%s", page_path));
                 try {
                     request_file_stream = new FileInputStream(
                             WebServerConfig.root_path + WebServerConfig.internal_err_page);
                 } catch (FileNotFoundException ex) {
                     // 若500错误页面无法找到，则log报错
-                    ex.printStackTrace();
+                    logger.logError("无法读取500.html文件");
                 }
                 status_code = WebServerConfig.StatusCode.INTERNAL_SERVER_ERROR;
-                e.printStackTrace();
             }
         } else {
             // 处理静态页面
@@ -99,16 +95,16 @@ public class RequestHandler implements Runnable {
                 request_file_stream = new FileInputStream(page_path);
             } catch (Exception e) {
                 // 静态页面处理错误，则报错
-                e.printStackTrace();
+                logger.logError(String.format("无法读取文件: %s", page_path));
             }
         }
 
         // -- 返回 --
-        returnPage(socket, status_code, request_file_stream);
-        try{
+        returnPage(socket, status_code, request_file_stream, request_ctx);
+        try {
             socket.close();
         } catch (Exception e){
-            e.printStackTrace();
+            logger.logError("无法关闭socket");
         }
 
     }
@@ -119,14 +115,24 @@ public class RequestHandler implements Runnable {
      * @param code 页面状态码
      * @param input_stream 页面的输入流
      */
-    private void returnPage(Socket socket, WebServerConfig.StatusCode code, InputStream input_stream){
+    private void returnPage(Socket socket, WebServerConfig.StatusCode code,
+                            InputStream input_stream, HttpRequest req_ctx) {
         try {
             var output_stream = socket.getOutputStream();
             output_stream.write(WebServerConfig.getHtmlHeader(code).getBytes());
             output_stream.write(input_stream.readAllBytes());
             output_stream.close();
+            logger.logRequest(socket.getInetAddress().getHostAddress(),
+                    req_ctx.header.get("User-Agent"),
+                    "",
+                    req_ctx.hitTime.toString(),
+                    req_ctx.requestType.name(),
+                    req_ctx.requestURI,
+                    code.code,
+                    input_stream.available(),
+                    "");
         } catch(Exception e){
-            e.printStackTrace();
+            logger.logError(String.format("传输数据时遇到异常: %s", socket.getInetAddress().getHostAddress()));
         }
     }
 

@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Date;
 
 public class Logger {
 
@@ -29,7 +30,15 @@ public class Logger {
     }
 
     /**
-     * 写入一行log信息
+     * 打印错误信息
+     * @param message 错误信息描述
+     */
+    public void logError(String message) {
+        logText(String.format("[%s]%s\n", new Date(), message));
+    }
+
+    /**
+     * 写入一行request log信息
      * @param remote_ip 发出请求的ip地址
      * @param visitor_ua 用户身份
      * @param login_id 用户登录id
@@ -40,15 +49,15 @@ public class Logger {
      * @param file_size 请求的文件的大小，单位为B
      * @param referer_page 包含访问链接的文件地址
      */
-    public void log(String remote_ip,
-                    String visitor_ua,
-                    String login_id,
-                    String hit_time,
-                    String request_method,
-                    String request_uri,
-                    int    status_code,
-                    int    file_size,
-                    String referer_page) throws IOException {
+    public void logRequest(String remote_ip,
+                           String visitor_ua,
+                           String login_id,
+                           String hit_time,
+                           String request_method,
+                           String request_uri,
+                           int    status_code,
+                           int    file_size,
+                           String referer_page) {
         String log_line = String.format("[%s]ua %s, login_id %s, hit_time %s, " +
                 "method %s, uri %s, status %d, size %d, referer_page %s\n",
                 remote_ip,
@@ -67,10 +76,15 @@ public class Logger {
      * 向文件写入log文本
      * @param text 写入的log文本
      */
-    private synchronized void logText(String text) throws IOException {
+    private synchronized void logText(String text) {
         // 考虑多线程同一个logger对象的调用
-        log_stream.write(text.getBytes());
-        GuiSingleton.GetInstance().addLog(text.getBytes());
+        try {
+            log_stream.write(text.getBytes());
+            // TODO：调试完成之后再启用图形化
+            GuiSingleton.GetInstance().addLog(text.getBytes());
+        } catch (IOException ex) {
+            System.err.printf("[%s]logger对象无法写入日志.\n", new Date());
+        }
     }
 
 }

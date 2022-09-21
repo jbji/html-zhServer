@@ -18,7 +18,7 @@ public class WebServerConfig {
 
     public static final String internal_err_page = "/500.html";
 
-    public static final int socket_timeout = 20 * 1000;
+    public static final int socket_timeout = 60 * 1000;
 
 
     public enum StatusCode {
@@ -36,7 +36,7 @@ public class WebServerConfig {
             this.code = code;
             this.description = description;
         }
-    };
+    }
 
     public static String getHtmlHeader(StatusCode statusCode) {
         return String.format("""

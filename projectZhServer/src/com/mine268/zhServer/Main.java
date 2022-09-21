@@ -26,7 +26,7 @@ public class Main {
                 200, 39943, "/index.html");
         */
 
-//        GuiSingleton.GetInstance();
+        GuiSingleton.GetInstance();
 //
 //        try {
 //            ClassLoader cl = new URLClassLoader(new URL[] { new URL("file:D:\\study\\7-2022-2023-1\\7-Computer-Network-Course-Design\\html-zhServer\\projectZhServer\\webroot\\cgi-bin\\test.jar") });

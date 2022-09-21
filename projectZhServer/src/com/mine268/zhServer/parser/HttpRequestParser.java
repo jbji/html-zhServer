@@ -1,5 +1,6 @@
 package com.mine268.zhServer.parser;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,6 +25,10 @@ public class HttpRequestParser {
         headerContext = context;
         String logic_line;
         String[] logic_line_sep;
+        String uri_with_arg;
+
+        // 设置请求到达的时间
+        ret.hitTime = new Date();
 
         // 获取Request-Line或者Simple-Request
         logic_line = getNextLine()
@@ -51,6 +56,7 @@ public class HttpRequestParser {
         if (uriCheck(logic_line_sep[1])) {
             var tmp_ix = logic_line_sep[1].indexOf("?");
             ret.requestURI = logic_line_sep[1].substring(0, tmp_ix == -1 ? logic_line_sep[1].length() : tmp_ix);
+            uri_with_arg = logic_line_sep[1];
         } else {
             throw new HttpRequestException("不正确的uri：" + logic_line);
         }
@@ -80,9 +86,8 @@ public class HttpRequestParser {
         ret.entityBody = headerContext.substring(curr_ix);
 
         // 处理表单参数
-        // TODO: tableValuesStr提取
         if (ret.requestType == HttpRequest.RequestType.GET) {
-            var tableStr = ret.requestURI.substring(ret.requestURI.indexOf("?") + 1);
+            var tableStr = uri_with_arg.substring(uri_with_arg.indexOf("?") + 1);
             ret.tableValues = parseTableData(tableStr);
             ret.tableValuesStr = tableStr;
         } else if (ret.requestType == HttpRequest.RequestType.POST) {
