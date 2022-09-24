@@ -41,7 +41,6 @@ public class WebServerConfig {
     public static String getHtmlHeader(StatusCode statusCode) {
         return String.format("""
             HTTP/1.0 %d %s
-            Content-Type: text/html
             Server: zhServer
             
             """,

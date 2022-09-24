@@ -92,7 +92,10 @@ public class RequestHandler implements Runnable {
         } else {
             // 处理静态页面
             try {
-                request_file_stream = new FileInputStream(page_path);
+                request_file_stream = switch (request_ctx.requestType) {
+                    case GET, POST -> new FileInputStream(page_path);
+                    default -> new ByteArrayInputStream(new byte[] {}); // 返回空流
+                };
             } catch (Exception e) {
                 // 静态页面处理错误，则报错
                 logger.logError(String.format("无法读取文件: %s", page_path));

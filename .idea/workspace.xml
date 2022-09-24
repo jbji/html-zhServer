@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="ArtifactsWorkspaceSettings">
+    <artifacts-to-build>
+      <artifact name="html-zhServer:jar" />
+    </artifacts-to-build>
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="03d9cb74-d23d-48a8-9093-a01d22949bef" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/projectZhServer/src/com/mine268/zhServer/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/projectZhServer/src/com/mine268/zhServer/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/projectZhServer/src/com/mine268/zhServer/logger/Logger.java" beforeDir="false" afterPath="$PROJECT_DIR$/projectZhServer/src/com/mine268/zhServer/logger/Logger.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/projectZhServer/src/com/mine268/zhServer/parser/HttpRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/projectZhServer/src/com/mine268/zhServer/parser/HttpRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/projectZhServer/src/com/mine268/zhServer/parser/HttpRequestParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/projectZhServer/src/com/mine268/zhServer/parser/HttpRequestParser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/projectZhServer/src/com/mine268/zhServer/webServer/RequestHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/projectZhServer/src/com/mine268/zhServer/webServer/RequestHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/projectZhServer/src/com/mine268/zhServer/webServer/WebServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/projectZhServer/src/com/mine268/zhServer/webServer/WebServer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/projectZhServer/src/com/mine268/zhServer/webServer/WebServerConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/projectZhServer/src/com/mine268/zhServer/webServer/WebServerConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/projectZhServer/webroot/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/projectZhServer/webroot/index.html" afterDir="false" />
     </list>
@@ -28,20 +28,20 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "full.screen.before.presentation.mode": "false",
-    "last_opened_file_path": "D:/study/7-2022-2023-1/7-Computer-Network-Course-Design/html-zhServer/projectZhServer/webroot",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0",
-    "settings.editor.selected.configurable": "editor.preferences.appearance"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;full.screen.before.presentation.mode&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/study/7-2022-2023-1/7-Computer-Network-Course-Design/html-zhServer/projectZhServer/webroot&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Artifacts&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.appearance&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\study\7-2022-2023-1\7-Computer-Network-Course-Design\html-zhServer\projectZhServer\webroot" />
@@ -70,7 +70,10 @@
       <workItem from="1663743258027" duration="58000" />
       <workItem from="1663743324767" duration="211000" />
       <workItem from="1663743551302" duration="4660000" />
-      <workItem from="1663750706932" duration="5416000" />
+      <workItem from="1663750706932" duration="6621000" />
+      <workItem from="1663762837228" duration="71000" />
+      <workItem from="1663993108351" duration="492000" />
+      <workItem from="1664004531025" duration="3518000" />
     </task>
     <servers />
   </component>
