@@ -50,7 +50,7 @@ public class WebServer {
                 new ThreadPoolExecutor.DiscardOldestPolicy()
         );
 
-        logger_for_all = new Logger(System.out);
+        logger_for_all = new Logger(); //default file log
     }
 
     /**

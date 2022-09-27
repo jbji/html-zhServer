@@ -6,6 +6,7 @@ import javax.swing.*;
 
 public class MainWindow implements Runnable{
     public void run(){
-        SwingUtilities.invokeLater(()-> FrameWindow.GetInstance().setVisible(true));
+        SwingUtilities.invokeLater(()->
+                FrameWindow.GetInstance().setVisible(true));
     }
 }

@@ -83,7 +83,7 @@ public class FrameWindow extends JFrame{
 
     private void initMenuBarListeners() {
         menuClose.addActionListener((event)->{
-
+            System.exit(0);
         });
         menuAbout.addActionListener((event)->
                 JOptionPane.showOptionDialog(null,
